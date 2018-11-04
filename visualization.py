@@ -178,9 +178,9 @@ if __name__ == "__main__":
     else:
         file_paths = sys.argv[1:]
         for file_path in file_paths:
-            try:
-                filename_ = read_vis(file_path)
-                write_vis(filename_, "dataset_"+filename_+".ADT.txt")
-                produce_pdf()
-            except Exception as e:
-                print(e)
+            # try:
+            filename_ = read_vis(file_path)
+            write_vis(filename_, "dataset_"+filename_+".ADT.txt")
+            produce_pdf()
+            # except Exception as e:
+            #     print(e)
