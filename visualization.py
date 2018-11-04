@@ -29,6 +29,7 @@ def write_vis(filename, tar_name) :
     #print(len(dncode_ac))
     #print(len(upcode_ac))
     versionlp = '\\version "2.18.2"\n'
+    title = '\\header {\n  title = "%s"\n}'.format(filename)
     upcode_st = "up=\\drummode {\n"
     upcode_ed = "}\n"
     dncode_st = "down=\\drummode {\n"
@@ -39,6 +40,7 @@ def write_vis(filename, tar_name) :
     basic_notation = basic_notation1+ basic_notation2 + basic_notation3
     vis = open(name,'w')
     vis.write(versionlp)
+    vis.write(title)
     vis.write(upcode_st)
     for i in range(0,len(upcode_ac),1):
         #print("ppppp")
