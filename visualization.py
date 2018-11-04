@@ -120,49 +120,49 @@ def read_vis(filename) :
 
     f = open("dataset_"+filename_txt,'w')
     for i in range(0,len(times)-1,1):
-        #print(i)
+        print(i)
         if snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
             f.write("hh sn bd\n") #hh sn bd
             sn+=1
             kk+=1
             hh+=1
-            #print("done")
+            print("done1")
         elif snare[sn] != times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
             f.write("hh r bd\n")
             #sn+=1
             kk+=1
             hh+=1
-            #print("done")
+            print("done2")
         elif snare[sn] == times[i] and kick[kk] != times[i] and hihat[hh] == times[i]:
             f.write("hh sn r\n")
             sn+=1
             #kk+=1
             hh+=1
-            #print("done")
+            print("done3")
         elif snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] != times[i]:
             f.write("r sn bd\n")
             sn+=1
             kk+=1
             #hh+=1
-            #print("done")
+            print("done4")
         elif snare[sn] != times[i] and kick[kk] != times[i] and hihat[hh] == times[i]:
             f.write("hh r r\n")
             #sn+=1
             #kk+=1
             hh+=1
-            #print("done")
+            print("done5")
         elif snare[sn] != times[i] and kick[kk] == times[i] and hihat[hh] != times[i]:
             f.write("r r bd\n")
             #sn+=1
             kk+=1
             #hh+=1
-            #print("done")
+            print("done6")
         elif snare[sn] == times[i] and kick[kk] != times[i] and hihat[hh] != times[i]:
             f.write("sn r r\n")
             sn+=1
             #kk+=1
             #hh+=1
-            #print("done")
+            print("done7")
 
     f.close()
     return filename_
