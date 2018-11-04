@@ -119,6 +119,7 @@ def read_vis(filename) :
     n = int(0)
 
     f = open("dataset_"+filename_txt,'w')
+    print("len(times) is: ", len(times))
     for i in range(0,len(times)-1,1):
         print(i)
         if snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
