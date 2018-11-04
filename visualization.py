@@ -55,7 +55,7 @@ def write_vis(filename, tar_name) :
 def read_vis(filename) :
     Onsets = ADT([filename], text="yes", tab="no")
     filename_ = ''.join(filename.split('/')[-1].split('.')[:-1])
-    filename_txt = filename_ + ".txt"
+    filename_txt = filename_ + ".ADT.txt"
 
     snare = []
     times = []
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         for file_path in file_paths:
             try:
                 filename_ = read_vis(file_path)
-                write_vis(filename_, "dataset_"+filename_+".txt")
+                write_vis(filename_, "dataset_"+filename_+".ADT.txt")
                 produce_pdf()
             except Exception as e:
                 print(e)
