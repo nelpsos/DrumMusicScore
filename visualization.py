@@ -1,3 +1,4 @@
+from ADTLib import ADT
 import os
 
 def write_vis(filename, upcode_str, dncode_str) :
@@ -22,7 +23,11 @@ def write_vis(filename, upcode_str, dncode_str) :
     vis.close()
 
 def read_vis(filename) :
-    vis = open(filename,'r')
+    Onsets = ADT([filename], text="yes", tab="no")
+    filename_txt = ''.join(filename.split('/')[-1].split('.')[:-1]) + '.txt'
+    vis = open(filename_txt, 'r')
+
+    return vis
 
 def produce_pdf(filename) :
     os.system("lilypond result.ly")
