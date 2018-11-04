@@ -124,45 +124,45 @@ def read_vis(filename) :
         print(i)
         if snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
             f.write("hh sn bd\n") #hh sn bd
-            sn+=1
-            kk+=1
-            hh+=1
+            sn = sn + 1 if sn < len(snare) - 1 else sn
+            kk = kk + 1 if kk < len(kick ) - 1 else kk
+            hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done1")
         elif snare[sn] != times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
             f.write("hh r bd\n")
-            #sn+=1
-            kk+=1
-            hh+=1
+            # sn = sn + 1 if sn < len(snare) - 1 else sn
+            kk = kk + 1 if kk < len(kick ) - 1 else kk
+            hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done2")
         elif snare[sn] == times[i] and kick[kk] != times[i] and hihat[hh] == times[i]:
             f.write("hh sn r\n")
-            sn+=1
-            #kk+=1
-            hh+=1
+            sn = sn + 1 if sn < len(snare) - 1 else sn
+            # kk = kk + 1 if kk < len(kick ) - 1 else kk
+            hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done3")
         elif snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] != times[i]:
             f.write("r sn bd\n")
-            sn+=1
-            kk+=1
-            #hh+=1
+            sn = sn + 1 if sn < len(snare) - 1 else sn
+            kk = kk + 1 if kk < len(kick ) - 1 else kk
+            # hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done4")
         elif snare[sn] != times[i] and kick[kk] != times[i] and hihat[hh] == times[i]:
             f.write("hh r r\n")
-            #sn+=1
-            #kk+=1
-            hh+=1
+            # sn = sn + 1 if sn < len(snare) - 1 else sn
+            # kk = kk + 1 if kk < len(kick ) - 1 else kk
+            hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done5")
         elif snare[sn] != times[i] and kick[kk] == times[i] and hihat[hh] != times[i]:
             f.write("r r bd\n")
-            #sn+=1
-            kk+=1
-            #hh+=1
+            # sn = sn + 1 if sn < len(snare) - 1 else sn
+            kk = kk + 1 if kk < len(kick ) - 1 else kk
+            # hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done6")
         elif snare[sn] == times[i] and kick[kk] != times[i] and hihat[hh] != times[i]:
             f.write("sn r r\n")
-            sn+=1
-            #kk+=1
-            #hh+=1
+            sn = sn + 1 if sn < len(snare) - 1 else sn
+            # kk = kk + 1 if kk < len(kick ) - 1 else kk
+            # hh = hh + 1 if hh < len(hihat) - 1 else hh
             print("done7")
 
     f.close()
