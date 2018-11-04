@@ -1,8 +1,9 @@
 from ADTLib import ADT
 import os
 import numpy as np
+import sys
 
-def write_vis(filename,tar_name) :
+def write_vis(filename, tar_name) :
     name = filename + ".ly"
     upcode_ac = []
     dncode_ac = []
@@ -51,7 +52,8 @@ def write_vis(filename,tar_name) :
 
 def read_vis(filename) :
     Onsets = ADT([filename], text="yes", tab="no")
-    filename_txt = ''.join(filename.split('/')[-1].split('.')[:-1]) + '.txt'
+    filename_ = ''.join(filename.split('/')[-1].split('.')[:-1])
+    filename_txt = filename_ + ".txt"
 
     snare = []
     times = []
@@ -114,7 +116,7 @@ def read_vis(filename) :
     kk = int(0)
     n = int(0)
 
-    f = open("dataset.txt",'w')
+    f = open("dataset_"+filename_txt,'w')
     for i in range(0,len(times)-1,1):
         #print(i)
         if snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
@@ -161,11 +163,22 @@ def read_vis(filename) :
             #print("done")
 
     f.close()
+    return filename_
 
 def produce_pdf() :
     os.system("lilypond result.ly")
 
 
-read_vis("data.txt")
-write_vis("result","dataset.txt")
-produce_pdf()
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("usage: python visualization.py [<path> [<path> ...]]")
+        print("   <path>:\tPath of input audio files to extract drum music score")
+    else:
+        file_paths = sys.argv[1:]
+        for file_path in file_paths:
+            try:
+                filename_ = read_vis(file_path)
+                write_vis(filename_, "dataset_"+filename_+".txt")
+                produce_pdf()
+            except Exception as e:
+                print(e)
