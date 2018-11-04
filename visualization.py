@@ -106,7 +106,7 @@ def read_vis(filename) :
     kick = list(np.float_(kick))
     times = list(np.float_(times))
 
-    print(hihat)
+    #print(hihat)
 
     #print(times)
     #print("\n")
