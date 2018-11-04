@@ -26,8 +26,8 @@ def write_vis(filename, tar_name) :
             dncode_ac.append('bd ')
         else:
             dncode_ac  .append('r ')
-    print(len(dncode_ac))
-    print(len(upcode_ac))
+    #print(len(dncode_ac))
+    #print(len(upcode_ac))
     versionlp = '\\version "2.18.2"\n'
     upcode_st = "up=\\drummode {\n"
     upcode_ed = "}\n"
