@@ -168,8 +168,8 @@ def read_vis(filename) :
     f.close()
     return filename_
 
-def produce_pdf() :
-    os.system("lilypond result.ly")
+def produce_pdf(filename) :
+    os.system("lilypond" + filename ".ly")
 
 
 if __name__ == "__main__":
@@ -182,6 +182,6 @@ if __name__ == "__main__":
             # try:
             filename_ = read_vis(file_path)
             write_vis(filename_, "dataset_"+filename_+".ADT.txt")
-            produce_pdf()
+            produce_pdf(filename_)
             # except Exception as e:
             #     print(e)
