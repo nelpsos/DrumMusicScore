@@ -19,7 +19,9 @@ def write_vis(filename, tar_name) :
             upcode_ac.append('hh ')
         else:
             upcode_ac  .append('r ')
-        print(tmp)
+        # print(tmp)
+        if tmp[1] == 'sn':
+            dncode_ac.append('sn ')
         if tmp[2] == 'bd\n':
             dncode_ac.append('bd ')
         else:
