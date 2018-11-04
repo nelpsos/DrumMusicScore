@@ -169,7 +169,7 @@ def read_vis(filename) :
     return filename_
 
 def produce_pdf(filename) :
-    os.system("lilypond" + filename + ".ly")
+    os.system("lilypond " + filename + ".ly")
 
 
 if __name__ == "__main__":
