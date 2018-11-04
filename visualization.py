@@ -29,7 +29,7 @@ def write_vis(filename, tar_name) :
     #print(len(dncode_ac))
     #print(len(upcode_ac))
     versionlp = '\\version "2.18.2"\n'
-    title = '\\header {\n  title = "%s"\n}'.format(filename)
+    title = '\\header {\n  title = "%s"\n}' % filename
     upcode_st = "up=\\drummode {\n"
     upcode_ed = "}\n"
     dncode_st = "down=\\drummode {\n"
