@@ -173,17 +173,3 @@ def read_vis(filename) :
 def produce_pdf(filename) :
     os.system("lilypond " + filename + ".ly")
 
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("usage: python visualization.py [<path> [<path> ...]]")
-        print("   <path>:\tPath of input audio files to extract drum music score")
-    else:
-        file_paths = sys.argv[1:]
-        for file_path in file_paths:
-            # try:
-            filename_ = read_vis(file_path)
-            write_vis(filename_, "dataset_"+filename_+".ADT.txt")
-            produce_pdf(filename_)
-            # except Exception as e:
-            #     print(e)
