@@ -2,6 +2,25 @@ from ADTLib import ADT
 import os
 import numpy as np
 import sys
+import math
+
+def calseg(bpm):
+    time = getruntime("playtimeinfo.txt")
+
+    restp = float(bpm) / 60
+    res = float(time) / restp
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print(restp)
+    print(time)
+    print(res)
+    return res
+
+
+
+def getruntime(filename):
+    f = open(filename, 'r')
+    time = f.readline()
+    return time
 
 def write_vis(filename, tar_name) :
     name = filename + ".ly"
@@ -67,7 +86,7 @@ def read_vis(filename) :
     ti = int(0)
 
     vis = open(filename_txt, 'r')
-
+    timeslist = open('times_list.txt', 'w')
     while True:
 
         line = vis.readline()
@@ -78,6 +97,7 @@ def read_vis(filename) :
 
         if ti == 0:
             times.append(tmp[0])
+            timeslist.write(tmp[0])
             before = tmp[0]
             ti += 1
             #print("case1")
@@ -88,6 +108,7 @@ def read_vis(filename) :
             else:
                 before = tmp[0]
                 times.append(tmp[0])
+                timeslist.write(tmp[0])
                 ti += 1
         #print(tmp)
         if tmp[1] == "SD":
@@ -101,7 +122,7 @@ def read_vis(filename) :
             #print("KD in")
 
     vis.close()
-
+    timeslist.close()
 
     snare = list(np.float_(snare))
     hihat = list(np.float_(hihat))
@@ -120,52 +141,62 @@ def read_vis(filename) :
     kk = int(0)
     n = int(0)
 
+    bpm = extBPM('bpmdet.txt')
+    res = calseg(bpm)
+    res += 0.1
+    res_fin = math.ceil(res)
+
+    tt = getruntime('playtimeinfo.txt')
+    ttt = (float(tt)/res_fin) / 16
+    #print(">RBNRBRBRBRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+    #print(ttt)
+
     f = open("dataset_"+filename_txt,'w')
-    print("len(times) is: ", len(times))
+    #print("len(times) is: ", len(times))
     for i in range(0,len(times)-1,1):
-        print(i)
+        #print(i)
         if snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
             f.write("hh sn bd\n") #hh sn bd
             sn = sn + 1 if sn < len(snare) - 1 else sn
             kk = kk + 1 if kk < len(kick ) - 1 else kk
             hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done1")
+            #print("done1")
         elif snare[sn] != times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
             f.write("hh r bd\n")
             # sn = sn + 1 if sn < len(snare) - 1 else sn
             kk = kk + 1 if kk < len(kick ) - 1 else kk
             hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done2")
+            #print("done2")
         elif snare[sn] == times[i] and kick[kk] != times[i] and hihat[hh] == times[i]:
             f.write("hh sn r\n")
             sn = sn + 1 if sn < len(snare) - 1 else sn
             # kk = kk + 1 if kk < len(kick ) - 1 else kk
             hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done3")
+            #print("done3")
         elif snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] != times[i]:
             f.write("r sn bd\n")
             sn = sn + 1 if sn < len(snare) - 1 else sn
             kk = kk + 1 if kk < len(kick ) - 1 else kk
             # hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done4")
+            #print("done4")
         elif snare[sn] != times[i] and kick[kk] != times[i] and hihat[hh] == times[i]:
             f.write("hh r r\n")
             # sn = sn + 1 if sn < len(snare) - 1 else sn
             # kk = kk + 1 if kk < len(kick ) - 1 else kk
             hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done5")
+            #print("done5")
         elif snare[sn] != times[i] and kick[kk] == times[i] and hihat[hh] != times[i]:
             f.write("r r bd\n")
             # sn = sn + 1 if sn < len(snare) - 1 else sn
             kk = kk + 1 if kk < len(kick ) - 1 else kk
             # hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done6")
+            #print("done6")
         elif snare[sn] == times[i] and kick[kk] != times[i] and hihat[hh] != times[i]:
             f.write("sn r r\n")
             sn = sn + 1 if sn < len(snare) - 1 else sn
             # kk = kk + 1 if kk < len(kick ) - 1 else kk
             # hh = hh + 1 if hh < len(hihat) - 1 else hh
-            print("done7")
+            #print("done7")
 
     f.close()
     return filename_
@@ -173,6 +204,38 @@ def read_vis(filename) :
 def produce_pdf(filename) :
     os.system("lilypond " + filename + ".ly")
 
+def wavtomp3(filename) :
+    strfile = "".join(filename)
+    command = 'lame ' + strfile
+    
+    print(command)
+    os.system(command)
+
+def getplaytime(filename) :
+    strfile="".join(filename)
+    tmp = strfile.split('.')
+    print(tmp)
+    path = tmp[0]+'.mp3'
+    getBPM(path)
+    command = 'mp3info -p "%s" '+ path+' > playtimeinfo.txt'
+    print(command)
+    os.system(command)
+
+def getBPM(filename):
+    command = 'bpm-tag -f ' + filename + ' 2>bpmdet.txt'
+    #print("HEEEEEEEERRRRRRRRREEEEEEEEE")
+    #print(command)
+    os.system(command)
+
+def extBPM(filename):
+    f = open(filename,'r')
+    line = f.readline()
+
+    tmp = line.split(" ")
+
+    #print(tmp)
+
+    return tmp[1]
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -180,6 +243,8 @@ if __name__ == "__main__":
         print("   <path>:\tPath of input audio files to extract drum music score")
     else:
         file_paths = sys.argv[1:]
+        wavtomp3(file_paths)
+        getplaytime(file_paths)
         for file_path in file_paths:
             # try:
             filename_ = read_vis(file_path)
