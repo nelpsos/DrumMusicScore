@@ -6,21 +6,47 @@ import math
 
 def calseg(bpm):
     time = getruntime("playtimeinfo.txt")
-
     restp = float(bpm) / 60
     res = float(time) / restp
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    print(restp)
-    print(time)
-    print(res)
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    #print(restp)
+    #print(time)
+    #print(res)
     return res
-
-
 
 def getruntime(filename):
     f = open(filename, 'r')
     time = f.readline()
     return time
+
+def wavtomp3(filename) :
+    strfile = "".join(filename)
+    command = 'lame ' + strfile
+    #print(command)
+    os.system(command)
+
+def getplaytime(filename) :
+    strfile="".join(filename)
+    tmp = strfile.split('.')
+    #print(tmp)
+    path = tmp[0]+'.mp3'
+    getBPM(path)
+    command = 'mp3info -p "%s" '+ path+' > playtimeinfo.txt'
+    #print(command)
+    os.system(command)
+
+def getBPM(filename):
+    command = 'bpm-tag -f ' + filename + ' 2>bpmdet.txt'
+    #print("HEEEEEEEERRRRRRRRREEEEEEEEE")
+    #print(command)
+    os.system(command)
+
+def extBPM(filename):
+    f = open(filename,'r')
+    line = f.readline()
+    tmp = line.split(" ")
+    #print(tmp)
+    return tmp[1]
 
 def write_vis(filename, tar_name) :
     name = filename + ".ly"
@@ -29,7 +55,6 @@ def write_vis(filename, tar_name) :
     f = open(tar_name,'r')
 
     while True:
-
         line = f.readline()
         if not line: break
         tmp = line.split(" ")
@@ -37,14 +62,14 @@ def write_vis(filename, tar_name) :
         if tmp[0] == "hh":
             upcode_ac.append('hh ')
         else:
-            upcode_ac  .append('r ')
+            upcode_ac.append('r ')
         # print(tmp)
         if tmp[1] == 'sn':
             dncode_ac.append('sn ')
         if tmp[2] == 'bd\n':
             dncode_ac.append('bd ')
         else:
-            dncode_ac  .append('r ')
+            dncode_ac.append('r ')
     #print(len(dncode_ac))
     #print(len(upcode_ac))
     versionlp = '\\version "2.18.2"\n'
@@ -129,13 +154,6 @@ def read_vis(filename) :
     kick = list(np.float_(kick))
     times = list(np.float_(times))
 
-    #print(hihat)
-
-    #print(times)
-    #print("\n")
-    #print(hihat)
-    #print("\n")
-    #print(kick)
     sn = int(0)
     hh = int(0)
     kk = int(0)
@@ -148,11 +166,71 @@ def read_vis(filename) :
 
     tt = getruntime('playtimeinfo.txt')
     ttt = (float(tt)/res_fin) / 16
-    #print(">RBNRBRBRBRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
-    #print(ttt)
 
+    if not snare : snare.append(float(tt)+1)
+    if not hihat : hihat.append(float(tt)+1)
+    if not kick : kick.append(float(tt)+1)
     f = open("dataset_"+filename_txt,'w')
-    #print("len(times) is: ", len(times))
+    gottt =ttt
+    while True:
+        print(ttt)
+        if ttt > float(tt):
+            break
+
+        if ttt > snare[sn]:
+                if ttt > kick[kk]:
+                    if ttt > hihat[hh]:
+                        f.write("hh sn bd\n") #hh sn bd
+                        sn  = sn + 1 if sn < len(snare) - 1 else sn
+                        kk = kk + 1 if kk < len(kick) - 1 else kk
+                        hh = hh + 1 if hh < len(hihat) - 1 else hh
+                        ttt+=gottt
+                    else:
+                        f.write("r sn bd\n") #r sn bd
+                        sn = sn + 1 if sn < len(snare) - 1 else sn
+                        kk = kk + 1 if kk < len(kick ) - 1 else kk
+                        ttt+=gottt
+                else:
+                    if ttt > hihat[hh]:
+                        f.write("hh sn r\n") #hh sn r
+                        sn  = sn + 1 if sn < len(snare) - 1 else sn
+                        #kk = kk + 1 if kk1 < len(kick) - 1 else kk1
+                        hh = hh + 1 if hh < len(hihat) - 1 else hh
+                        ttt+=gottt
+                    else:
+                        f.write("r sn r\n") #r sn bd
+                        sn = sn + 1 if sn < len(snare) - 1 else sn
+                        ttt+=gottt
+        else:
+            if ttt > kick[kk]:
+                if ttt > hihat[hh]:
+                    f.write("hh r bd\n") #hh r bd
+                    #sn  = sn + 1 if sn1 < len(snare) - 1 else sn1
+                    kk = kk + 1 if kk < len(kick) - 1 else kk
+                    hh = hh + 1 if hh < len(hihat) - 1 else hh
+                    ttt+=gottt
+                else:
+                    f.write("r r bd\n") #hh r bd
+                    #sn  = sn + 1 if sn1 < len(snare) - 1 else sn1
+                    kk = kk + 1 if kk < len(kick) - 1 else kk
+                    #hh = hh + 1 if hh1 < len(hihat) - 1 else hh1
+                    ttt+=gottt
+            else:
+                if ttt > hihat[hh]:
+                    f.write("hh r r\n") #hh r bd
+                    #sn  = sn + 1 if sn1 < len(snare) - 1 else sn1
+                    #kk = kk + 1 if kk1 < len(kick) - 1 else kk1
+                    hh = hh + 1 if hh < len(hihat) - 1 else hh
+                    ttt+=gottt
+                else:
+                    f.write("r r r\n") #hh r bd
+                    #sn  = sn + 1 if sn1 < len(snare) - 1 else sn1
+                    #kk = kk + 1 if kk1 < len(kick) - 1 else kk1
+                    #hh = hh + 1 if hh1 < len(hihat) - 1 else hh1
+                    ttt+=gottt
+    f.close()
+    return filename_
+'''
     for i in range(0,len(times)-1,1):
         #print(i)
         if snare[sn] == times[i] and kick[kk] == times[i] and hihat[hh] == times[i]:
@@ -197,47 +275,10 @@ def read_vis(filename) :
             # kk = kk + 1 if kk < len(kick ) - 1 else kk
             # hh = hh + 1 if hh < len(hihat) - 1 else hh
             #print("done7")
-
-    f.close()
-    return filename_
+'''
 
 def produce_pdf(filename) :
     os.system("lilypond " + filename + ".ly")
-
-<<<<<<< HEAD
-=======
-def wavtomp3(filename) :
-    strfile = "".join(filename)
-    command = 'lame ' + strfile
-    
-    print(command)
-    os.system(command)
-
-def getplaytime(filename) :
-    strfile="".join(filename)
-    tmp = strfile.split('.')
-    print(tmp)
-    path = tmp[0]+'.mp3'
-    getBPM(path)
-    command = 'mp3info -p "%s" '+ path+' > playtimeinfo.txt'
-    print(command)
-    os.system(command)
-
-def getBPM(filename):
-    command = 'bpm-tag -f ' + filename + ' 2>bpmdet.txt'
-    #print("HEEEEEEEERRRRRRRRREEEEEEEEE")
-    #print(command)
-    os.system(command)
-
-def extBPM(filename):
-    f = open(filename,'r')
-    line = f.readline()
-
-    tmp = line.split(" ")
-
-    #print(tmp)
-
-    return tmp[1]
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -254,4 +295,3 @@ if __name__ == "__main__":
             produce_pdf(filename_)
             # except Exception as e:
             #     print(e)
->>>>>>> 6b0e710a40a0b8421aef350340b9b659d945735c
